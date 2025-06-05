@@ -1,0 +1,48 @@
+image: node:18
+
+variables:
+  VERACODE_API_ID: ${VERACODE_API_ID}
+  VERACODE_API_KEY: ${VERACODE_API_KEY}
+
+stages:
+  - build
+  - security
+
+# Cache node_modules to speed up builds
+cache:
+  paths:
+    - node_modules/
+
+# Install dependencies and build the application
+build:
+  stage: build
+  script:
+    - npm install
+    - npm install typescript
+    - ./compile.sh
+  artifacts:
+    paths:
+      - app.js
+      - index.html
+    expire_in: 1 hour
+
+# Install Veracode CLI and run security scans
+veracode_scan:
+  stage: security
+  script:
+    # Install Veracode CLI
+    - curl -sSL https://tools.veracode.com/veracode-cli/install | bash
+    - export PATH="$PATH:$HOME/.local/bin"
+    
+    # Create a zip file of the application
+    - zip -r app.zip app.js index.html
+    
+    # Run Veracode Static Analysis
+    - veracode static scan app.zip --fail-on-very-high
+    
+    # Run Veracode SCA scan
+    - veracode sca scan --fail-on-very-high
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"  # Only run on main branch
+  dependencies:
+    - build 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickNotes</title>
+</head>
+<body>
+    <div id="auth-container">
+        <h2>Login/Register</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="register()">Register</button>
+    </div>
+
+    <div id="notes-container" style="display: none;">
+        <h2>My Notes</h2>
+        <button onclick="logout()">Logout</button>
+        <div>
+            <input type="text" id="note-title" placeholder="Note Title">
+            <textarea id="note-content" placeholder="Note Content"></textarea>
+            <button onclick="saveNote()">Save Note</button>
+        </div>
+        <div>
+            <button onclick="exportAsCSV()">Export as CSV</button>
+            <button onclick="exportAsTXT()">Export as TXT</button>
+        </div>
+        <div id="notes-list"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
